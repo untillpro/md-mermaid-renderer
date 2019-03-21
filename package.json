@@ -1,0 +1,56 @@
+{
+	"name": "untill-highlighter",
+	"displayName": "Untill Highlighter",
+	"description": "Highlights untill word in code",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.31.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:untillext.helloWorld",
+		"onCommand:untillext.renderMermaid"
+	],
+	"main": "./src/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "untillext.helloWorld",
+				"title": "Untill: Hello World"
+			},
+			{
+				"command": "untillext.renderMermaid",
+				"title": "Untill: Render Mermaid"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "untillext.renderMermaid",
+				"key": "ctrl+shift+r",
+				"mac": "cmd+shift+r",
+				"when": "editorTextFocus"
+			}
+		]
+	},
+	"scripts": {
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^3.3.1",
+		"vscode": "^1.1.28",
+		"eslint": "^5.13.0",
+		"@types/node": "^10.12.21",
+		"@types/mocha": "^2.2.42"
+	},
+	"dependencies": {
+		"absolute": "0.0.1",
+		"chalk": "^2.4.2",
+		"lodash": "^4.17.11",
+		"moment": "^2.24.0",
+		"open": "0.0.5",
+		"puppeteer": "^1.13.0"
+	}
+}
