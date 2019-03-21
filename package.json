@@ -1,10 +1,10 @@
 {
-	"name": "md-mermaid-rendere",
+	"name": "md-mermaid-renderer",
 	"displayName": "Markdown Mermaid Renderer",
 	"description": "Renders all mermaid graphs to an image files",
-	"publisher": "Yohanson",
+	"publisher": "unTillPro",
 	"repository": "https://github.com/untillpro/md-mermaid-renderer.git",
-	"version": "0.0.1",
+	"version": "0.1.1",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -12,39 +12,28 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:ext.renderMermaid"
+		"onCommand:markdown-mermaid-renderer.renderMermaid"
 	],
 	"main": "./src/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "ext.renderMermaid",
-				"title": "Untill: Render Mermaid"
+				"command": "markdown-mermaid-renderer.renderMermaid",
+				"title": "Markdown: render mermaid"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "ext.renderMermaid",
+				"command": "markdown-mermaid-renderer.renderMermaid",
 				"key": "ctrl+shift+m",
 				"mac": "cmd+shift+m",
 				"when": "editorTextFocus"
 			}
 		]
 	},
-	"scripts": {
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "node ./node_modules/vscode/bin/test"
-	},
-	"devDependencies": {
-		"typescript": "^3.3.1",
-		"vscode": "^1.1.28",
-		"eslint": "^5.13.0",
-		"@types/node": "^10.12.21",
-		"@types/mocha": "^2.2.42"
-	},
 	"dependencies": {
-		"chalk": "^2.4.2",
 		"lodash": "^4.17.11",
-		"puppeteer": "^1.13.0"
+		"puppeteer": "^1.13.0",
+		"tmp": "0.0.33"
 	}
 }

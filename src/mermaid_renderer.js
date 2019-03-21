@@ -1,14 +1,13 @@
-#!/usr/bin/env node
 'use strict';
 const vscode = require('vscode');
-const chalk = require('chalk');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const tmp = require('tmp');
 
 const error = message => {
-    console.log(chalk.red(`\n${message}\n`));
+    console.log(`\n${message}\n`);
     process.exit(1);
 };
 
@@ -45,7 +44,7 @@ const _asyncToGenerator = (fn) => {
     };
 }
 
-const renderMermaidChunk = async (i = null, o = null, t = 'default', w = 800, h = 600, bgcolor = null, cfg, css, pupCfg) => {
+const renderMermaidChunk = (i = null, o = null, t = 'default', w = 800, h = 600, bgcolor = null, cfg, css, pupCfg) => {
     let theme = t;
     let width = w;
     let height = h;
@@ -196,11 +195,11 @@ const getOutputFileName = (num) => {
 
 const getInputFileName = (num) => {
     const n = num || 0;
-
+    
     const activeEditor = vscode.window.activeTextEditor;
      
     const editorPath = activeEditor ? activeEditor.document.uri.fsPath : undefined
-    const folderPath = path.dirname(editorPath);
+    const folderPath = tmp.dirSync().name;
     const filename = path.parse(editorPath).name;
     
     return `${folderPath}/${filename}_input_${n}.md`;
@@ -212,7 +211,7 @@ const renderMermaid = () => {
     const activeEditor = vscode.window.activeTextEditor;
     const linesCount = parseInt(activeEditor.document.lineCount, 10);
 
-    const startReg = /^```mermaid(?:\s+(\w+\.(?:svg|png|pdf)))?\s*$/;
+    const startReg = /^```mermaid(?:\s+(.+\.(?:svg|png|pdf)))?\s*$/i;
     const endReg = /^```\s*$/;
 
     let write = false;
