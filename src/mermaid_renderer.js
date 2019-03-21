@@ -45,7 +45,7 @@ const _asyncToGenerator = (fn) => {
     };
 }
 
-const renderMermaidChunk = (i = null, o = null, t = 'default', w = 800, h = 600, bgcolor = null, cfg, css, pupCfg) => {
+const renderMermaidChunk = async (i = null, o = null, t = 'default', w = 800, h = 600, bgcolor = null, cfg, css, pupCfg) => {
     let theme = t;
     let width = w;
     let height = h;
@@ -108,7 +108,7 @@ const renderMermaidChunk = (i = null, o = null, t = 'default', w = 800, h = 600,
     height = parseInt(height);
     backgroundColor = backgroundColor || 'white';
 
-    _asyncToGenerator(function* () {
+    return _asyncToGenerator(function* () {
         const browser = yield puppeteer.launch(puppeteerConfig);
         const page = yield browser.newPage();
 
@@ -227,15 +227,21 @@ const renderMermaid = () => {
         const line = activeEditor.document.lineAt(i);
 
         const resEnd = line.text.match(endReg);
-        if (resEnd) {
+
+        if (resEnd && write) {
             write = false;
 
             inputFile = getInputFileName(graphsCount);
             fs.writeFileSync(inputFile, tmp_str);
 
-            renderMermaidChunk(inputFile, outputFile);
-
-            vscode.window.showInformationMessage(`${outputFile} was successfuly generated`);
+            renderMermaidChunk(inputFile, outputFile)
+                .then(() => {
+                    vscode.window.showInformationMessage(`${outputFile} was successfuly generated`);
+                })
+                .catch((e) => {
+                    vscode.window.showErrorMessage(e.message);
+                    fs.unlink(inputFile);
+                });
         }
 
         if (write) tmp_str += `${line.text}${os.EOL}`;

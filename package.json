@@ -1,7 +1,9 @@
 {
-	"name": "untill-highlighter",
-	"displayName": "Untill Highlighter",
-	"description": "Highlights untill word in code",
+	"name": "md-mermaid-rendere",
+	"displayName": "Markdown Mermaid Renderer",
+	"description": "Renders all mermaid graphs to an image files",
+	"publisher": "Yohanson",
+	"repository": "https://github.com/untillpro/md-mermaid-renderer.git",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.31.0"
@@ -10,26 +12,21 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:untillext.helloWorld",
-		"onCommand:untillext.renderMermaid"
+		"onCommand:ext.renderMermaid"
 	],
 	"main": "./src/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "untillext.helloWorld",
-				"title": "Untill: Hello World"
-			},
-			{
-				"command": "untillext.renderMermaid",
+				"command": "ext.renderMermaid",
 				"title": "Untill: Render Mermaid"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "untillext.renderMermaid",
-				"key": "ctrl+shift+r",
-				"mac": "cmd+shift+r",
+				"command": "ext.renderMermaid",
+				"key": "ctrl+shift+m",
+				"mac": "cmd+shift+m",
 				"when": "editorTextFocus"
 			}
 		]
@@ -46,11 +43,8 @@
 		"@types/mocha": "^2.2.42"
 	},
 	"dependencies": {
-		"absolute": "0.0.1",
 		"chalk": "^2.4.2",
 		"lodash": "^4.17.11",
-		"moment": "^2.24.0",
-		"open": "0.0.5",
 		"puppeteer": "^1.13.0"
 	}
 }
