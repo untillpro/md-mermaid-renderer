@@ -4,7 +4,8 @@
 	"description": "Renders all mermaid graphs to an image files",
 	"publisher": "unTillPro",
 	"repository": "https://github.com/untillpro/md-mermaid-renderer.git",
-	"version": "0.1.1",
+	"version": "0.1.2",
+	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -32,8 +33,14 @@
 		]
 	},
 	"dependencies": {
+		"bufferutil": "^4.0.1",
 		"lodash": "^4.17.11",
 		"puppeteer": "^1.13.0",
-		"tmp": "0.0.33"
+		"tmp": "0.0.33",
+		"utf-8-validate": "^5.0.2",
+		"webpack": "^4.29.6"
+	},
+	"devDependencies": {
+		"webpack-cli": "^3.3.0"
 	}
 }
