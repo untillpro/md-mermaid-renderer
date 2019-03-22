@@ -166,7 +166,6 @@ const renderMermaidChunk = (i = null, o = null, t = 'default', w = 800, h = 600,
             });
         }
 
-        console.log(`${output} created`);
         fs.unlinkSync(input);
     
         browser.close();
@@ -265,7 +264,6 @@ const renderMermaid = () => {
 
     if (promises && promises.length > 0) {
         Promise.all(promises).then(() => {
-            console.log('Removing temporary folder: ' + tempFolder);
             tmpObj.removeCallback();
         });
     }
