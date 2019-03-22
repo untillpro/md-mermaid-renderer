@@ -166,40 +166,34 @@ const renderMermaidChunk = (i = null, o = null, t = 'default', w = 800, h = 600,
             });
         }
 
+        console.log(`${output} created`);
         fs.unlinkSync(input);
     
         browser.close();
     })();
 };
 
-const getOutputSpecifiedFileName = (filename) => {
-    const activeEditor = vscode.window.activeTextEditor;
-     
-    const editorPath = activeEditor ? activeEditor.document.uri.fsPath : undefined
-    const folderPath = path.dirname(editorPath);
-
+const getOutputSpecifiedFileName = (filename, folderPath) => {
     return `${folderPath}/${filename}`;
 }
 
-const getOutputFileName = (num) => {
+const getOutputFileName = (num, folderPath) => {
     const n = num || 0;
 
     const activeEditor = vscode.window.activeTextEditor;
      
     const editorPath = activeEditor ? activeEditor.document.uri.fsPath : undefined
-    const folderPath = path.dirname(editorPath);
     const filename = path.parse(editorPath).name;
 
     return `${folderPath}/${filename}_mrmd_${n}.png`;
 }
 
-const getInputFileName = (num) => {
+const getInputFileName = (num, folderPath) => {
     const n = num || 0;
     
     const activeEditor = vscode.window.activeTextEditor;
      
     const editorPath = activeEditor ? activeEditor.document.uri.fsPath : undefined
-    const folderPath = tmp.dirSync().name;
     const filename = path.parse(editorPath).name;
     
     return `${folderPath}/${filename}_input_${n}.md`;
@@ -209,6 +203,7 @@ const renderMermaid = () => {
     //TODO проверки
 
     const activeEditor = vscode.window.activeTextEditor;
+    const editorPath = activeEditor ? activeEditor.document.uri.fsPath : undefined;
     const linesCount = parseInt(activeEditor.document.lineCount, 10);
 
     const startReg = /^```mermaid(?:\s+(.+\.(?:svg|png|pdf)))?\s*$/i;
@@ -220,7 +215,13 @@ const renderMermaid = () => {
     let inputFile = null;
     let outputFile = null;
 
+    const currentFolder = path.dirname(editorPath);
+    const tmpObj = tmp.dirSync()
+    const tempFolder = tmpObj.name;
+
     let graphsCount = 0;
+
+    const promises = [];
 
     for (var i = 0; i < linesCount; i++) {
         const line = activeEditor.document.lineAt(i);
@@ -230,10 +231,10 @@ const renderMermaid = () => {
         if (resEnd && write) {
             write = false;
 
-            inputFile = getInputFileName(graphsCount);
+            inputFile = getInputFileName(graphsCount, tempFolder);
             fs.writeFileSync(inputFile, tmp_str);
 
-            renderMermaidChunk(inputFile, outputFile)
+            const p = renderMermaidChunk(inputFile, outputFile)
                 .then(() => {
                     vscode.window.showInformationMessage(`${outputFile} was successfuly generated`);
                 })
@@ -241,6 +242,8 @@ const renderMermaid = () => {
                     vscode.window.showErrorMessage(e.message);
                     fs.unlink(inputFile);
                 });
+
+            promises.push(p);
         }
 
         if (write) tmp_str += `${line.text}${os.EOL}`;
@@ -249,17 +252,22 @@ const renderMermaid = () => {
 
         if (resStart) {
             graphsCount++;
-
             write = true;
-
             tmp_str = '';
 
             if (resStart[1] && typeof resStart[1] === 'string') {
-                outputFile = getOutputSpecifiedFileName(resStart[1]);
+                outputFile = getOutputSpecifiedFileName(resStart[1], currentFolder);
             } else {
-                outputFile = getOutputFileName(graphsCount);
+                outputFile = getOutputFileName(graphsCount, currentFolder);
             }
         }
+    }
+
+    if (promises && promises.length > 0) {
+        Promise.all(promises).then(() => {
+            console.log('Removing temporary folder: ' + tempFolder);
+            tmpObj.removeCallback();
+        });
     }
 }
 
